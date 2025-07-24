@@ -5,10 +5,10 @@ import GitHub from "next-auth/providers/github";
 import { Pool } from "pg";
 
 const pool = new Pool({
-  user: "gokul",
-  host: "localhost",
-  database: "nextauthdb",
-  password: "Lg@2024",
+  user: process.env.DATABASE_USER,
+  host: process.env.DATABASE_HOST,
+  database: process.env.DATABASE_NAME,
+  password: process.env.DATABASE_PASSWORD,
   port: 5432,
   max: 20,
   idleTimeoutMillis: 30000,
