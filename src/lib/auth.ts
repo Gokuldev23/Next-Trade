@@ -1,33 +1,30 @@
-// src/lib/auth.ts
-import { cookies } from "next/headers";
-import { pool } from "./db";
+import NextAuth from "next-auth";
+import PostgresAdapter from "@auth/pg-adapter";
+import GitHub from "next-auth/providers/github";
 
-export async function getCurrentUser() {
-  const cookieStore = cookies();
-  const token = (await cookieStore).get("session_token")?.value;
+import { Pool } from "pg";
 
-  if (!token) return null;
+const pool = new Pool({
+  user: "gokul",
+  host: "localhost",
+  database: "nextauthdb",
+  password: "Lg@2024",
+  port: 5432,
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+});
 
-  const client = await pool.connect();
-
-  try {
-    const sessionRes = await client.query(
-      `SELECT * FROM sessions WHERE session_token = $1 AND expires_at > NOW()`,
-      [token]
-    );
-
-    const session = sessionRes.rows[0];
-    if (!session) return null;
-
-    const userRes = await client.query(`SELECT * FROM users WHERE id = $1`, [
-      session.user_id,
-    ]);
-
-    return userRes.rows[0] || null;
-  } catch (e) {
-    console.error("Error in getCurrentUser:", e);
-    return null;
-  } finally {
-    client.release();
-  }
-}
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PostgresAdapter(pool),
+  providers: [
+    GitHub({
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    }),
+  ],
+  session: {
+    strategy: "database",
+    maxAge: 60,
+  },
+});
