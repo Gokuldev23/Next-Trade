@@ -1,5 +1,5 @@
 import NextAuth from "next-auth";
-import PostgresAdapter from "@auth/pg-adapter";
+import NeonAdapter from "@auth/neon-adapter";
 import GitHub from "next-auth/providers/github";
 
 import { Pool } from "pg";
@@ -17,7 +17,7 @@ const pool = new Pool({
 });
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PostgresAdapter(pool),
+  adapter: NeonAdapter(pool),
   providers: [
     GitHub({
       clientId: process.env.GITHUB_CLIENT_ID!,
