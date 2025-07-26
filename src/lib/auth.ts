@@ -1,12 +1,12 @@
 import NextAuth from "next-auth";
 import NeonAdapter from "@auth/neon-adapter";
 import GitHub from "next-auth/providers/github";
-import { Pool } from "pg";
+import { Pool } from "@neondatabase/serverless";
 
 
 export const { handlers, auth, signIn, signOut } = NextAuth(() => {
   // Create a `Pool` inside the request handler.
-  const pool = new Pool({ connectionString: process.env.DATABASE_URL })
+  const pool:any = new Pool({ connectionString: process.env.DATABASE_URL })
   return {
     adapter: NeonAdapter(pool),
     providers: [
