@@ -11,6 +11,3 @@ CREATE TABLE IF NOT EXISTS session (
     token TEXT NOT NULL UNIQUE,
     created_at DATE DEFAULT NOW()
 );
-
-
-SELECT * FROM users;
