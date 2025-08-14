@@ -6,7 +6,7 @@ export default function RegisterPage() {
 
     const handleSubmit = async() => {
         "use server"
-        let {status} = await fetch("http://localhost:3000/api/auth/register", {
+        const {status} = await fetch("http://localhost:3000/api/auth/register", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
