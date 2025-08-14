@@ -2,8 +2,6 @@ import { randomBytes } from "crypto";
 import { cookies } from "next/headers";
 import { db } from "@/lib/db/db";
 import bcrypt from "bcrypt";
-import { redirect, RedirectType } from "next/navigation";
-import { error } from "console";
 
 export async function POST(req: Request) {
   try {

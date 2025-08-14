@@ -6,6 +6,6 @@ export default function AuthLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <div className='place-content-center'>{children}</div>
+        <div className='place-content-center bg-primary'>{children}</div>
     )
 }
