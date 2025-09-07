@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  lint-build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      # Lint with Biome
+      - name: Run Biome lint
+        run: pnpm biome check .
+
+      # Build check
+      - name: Build project
+        run: pnpm run build
+
+      # Jest tests
+      - name: Run Jest tests
+        run: pnpm run test -- --ci --coverage

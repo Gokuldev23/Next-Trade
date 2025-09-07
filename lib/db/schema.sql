@@ -371,3 +371,4 @@ BEGIN
     INSERT INTO portfolios (user_id, name, description, portfolio_type) VALUES 
     (demo_user_id, 'All Trades', 'All trades combined', 'ALL');
 END $$;
+
