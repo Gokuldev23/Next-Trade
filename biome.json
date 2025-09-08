@@ -1,0 +1,25 @@
+{
+	"files": {
+		"includes": [
+			"**",
+			"!app/globals.css",
+			"/middleware.ts",
+			"!**/*.test.js",
+			"**/special.test.js",
+			"!test",
+			"!.next",
+			"!eslint.config.mjs",
+			"!coverage"
+		]
+	},
+	"linter": {
+		"rules": {
+			"correctness": {
+				"useUniqueElementIds": "off"
+			},
+			"suspicious": {
+				"noExplicitAny": "off"
+			}
+		}
+	}
+}

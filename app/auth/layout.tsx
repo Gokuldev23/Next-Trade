@@ -1,11 +1,9 @@
-import React from 'react'
+import type React from "react";
 
 export default function AuthLayout({
-    children,
+	children,
 }: Readonly<{
-    children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-    return (
-        <div className='place-content-center bg-primary'>{children}</div>
-    )
+	return <div className="place-content-center bg-primary">{children}</div>;
 }
