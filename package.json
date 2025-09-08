@@ -7,7 +7,8 @@
 		"build": "next build --turbopack",
 		"start": "next start",
 		"lint": "biome check",
-		"format": "biome format --write"
+		"lint:fix": "biome check --unsafe",
+		"format": "biome format --write --fix"
 	},
 	"dependencies": {
 		"@radix-ui/react-label": "^2.1.7",

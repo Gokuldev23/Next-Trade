@@ -1,10 +1,12 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
 import Form from "next/form";
+import { redirect } from "next/navigation";
 import { Link } from "next-view-transitions";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
+import { register } from "@/lib/actions/auth.action";
 import { Button } from "@/lib/components/ui/button";
-import { Input } from "@/lib/components/ui/input";
 import {
 	Card,
 	CardContent,
@@ -12,11 +14,9 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/lib/components/ui/card";
+import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
-import { register } from "@/lib/actions/auth.action";
-import { RegisterState } from "@/lib/types/auth.type";
-import { redirect } from "next/navigation";
-import { toast } from "sonner";
+import type { RegisterState } from "@/lib/types/auth.type";
 
 const initialState: RegisterState = {
 	success: false,

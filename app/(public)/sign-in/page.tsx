@@ -1,10 +1,12 @@
 "use client";
 
-import { useActionState, useEffect } from "react";
 import Form from "next/form";
+import { redirect } from "next/navigation";
 import { Link } from "next-view-transitions";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
+import { login } from "@/lib/actions/auth.action";
 import { Button } from "@/lib/components/ui/button";
-import { Input } from "@/lib/components/ui/input";
 import {
 	Card,
 	CardContent,
@@ -12,14 +14,11 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/lib/components/ui/card";
+import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
+import type { LoginState } from "@/lib/types/auth.type";
 
-import { login } from "@/lib/actions/auth.action";
-import { LoginState } from "@/lib/types/auth.type";
-import { toast } from "sonner";
-import { redirect } from "next/navigation";
-
-const initialState: LoginState = {
+const _initialState: LoginState = {
 	success: false,
 	message: "",
 	errors: null,
@@ -44,7 +43,7 @@ export default function SignInPage() {
 		if (!state?.success && state?.message) {
 			toast.error(state?.message);
 		}
-	}, [state?.success]);
+	}, [state?.success, state?.message]);
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -115,7 +114,10 @@ export default function SignInPage() {
 
 					{/* Extra links */}
 					<div className="mt-4 flex justify-between text-sm">
-						<a href="#" className="text-gray-500 underline hover:text-gray-800">
+						<a
+							href="/forgot-password"
+							className="text-gray-500 underline hover:text-gray-800"
+						>
 							Forgot password?
 						</a>
 						<Link

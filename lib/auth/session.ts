@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { getRedisClient } from "../db/redis";
 
@@ -103,6 +103,6 @@ async function setCookie(sessionId: string, cookies: Pick<Cookies, "set">) {
 }
 
 async function getSessionIdByCookie(cookies: Pick<Cookies, "get">) {
-	let sessionData = cookies.get(COOKIE_NAME);
+	const sessionData = cookies.get(COOKIE_NAME);
 	return sessionData?.value;
 }

@@ -1,9 +1,9 @@
 "use server";
 import bcrypt from "bcrypt";
-import { db } from "../db/postgres";
-import z from "zod";
 import { redirect } from "next/navigation";
+import z from "zod";
 import { createSession, deleteSession } from "../auth/session";
+import { db } from "../db/postgres";
 
 const loginSchema = z.object({
 	email: z.email("Please enter a valid email"),
@@ -52,7 +52,7 @@ const login = async (prev: any, formData: FormData) => {
 			};
 		}
 		delete user.password_hash;
-		let session = await createSession(user);
+		const session = await createSession(user);
 		if (!session) {
 			throw new Error("Session creation failed");
 		}

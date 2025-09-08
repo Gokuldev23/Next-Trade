@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 export async function middleware(request: NextRequest) {
 	const { pathname } = request.nextUrl;
 
-	const publicRoutes = ["/login", "/register", "/about", "/"];
+	// const publicRoutes = ["/login", "/register", "/about", "/"];
 	const protectedRoutes = ["/", "/dashboard", "/profile", "/settings"];
 	// Check for session
 	const isAuthenticated = checkAuth(request); // Implement this function
