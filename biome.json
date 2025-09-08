@@ -8,7 +8,8 @@
 			"**/special.test.js",
 			"!test",
 			"!.next",
-			"!eslint.config.mjs"
+			"!eslint.config.mjs",
+			"!coverage"
 		]
 	},
 	"linter": {

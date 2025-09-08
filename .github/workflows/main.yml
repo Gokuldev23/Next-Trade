@@ -41,4 +41,4 @@ jobs:
 
       # Jest tests
       - name: Run Jest tests
-        run: pnpm run test -- --ci --coverage
+        run: pnpm run test:ci
