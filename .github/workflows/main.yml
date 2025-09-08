@@ -10,21 +10,30 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the repository
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      # Setup pnpm FIRST
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9 # set your pnpm version here
+
+      # Then setup Node.js with pnpm caching
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
 
+      # Install dependencies
       - name: Install dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       # Lint with Biome
       - name: Run Biome lint
-        run: pnpm biome check .
+        run: pnpm run lint
 
       # Build check
       - name: Build project
