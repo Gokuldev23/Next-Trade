@@ -14,18 +14,18 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # Setup Node.js with pnpm caching
+      # Setup pnpm FIRST
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 9 # set your pnpm version here
+
+      # Then setup Node.js with pnpm caching
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'pnpm'
-
-      # Setup pnpm
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v2
-        with:
-          version: 9 # set your pnpm version here
 
       # Install dependencies
       - name: Install dependencies
