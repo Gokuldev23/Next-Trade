@@ -17,7 +17,6 @@ import {
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
 
-
 export default function SignInPage() {
 	const [state, action, isPending] = useActionState(login, null);
 
