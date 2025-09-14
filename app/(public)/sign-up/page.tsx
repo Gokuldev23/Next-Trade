@@ -16,21 +16,9 @@ import {
 } from "@/lib/components/ui/card";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
-import type { RegisterState } from "@/lib/types/auth.type";
-
-const initialState: RegisterState = {
-	success: false,
-	message: "",
-	errors: null,
-	inputs: {
-		name: "",
-		email: "",
-		password: "",
-	},
-};
 
 export default function SignUpPage() {
-	const [state, action, isPending] = useActionState(register, initialState);
+	const [state, action, isPending] = useActionState(register, null);
 
 	const nameError = state?.errors?.name;
 	const emailError = state?.errors?.email;

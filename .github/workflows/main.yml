@@ -33,7 +33,7 @@ jobs:
 
       # Lint with Biome
       - name: Run Biome lint
-        run: pnpm run lint
+        run: pnpm run format && pnpm run lint
 
       # Build check
       - name: Build project

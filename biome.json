@@ -5,6 +5,7 @@
 			"!app/globals.css",
 			"/middleware.ts",
 			"!**/*.test.js",
+			"!**/*.test.ts",
 			"**/special.test.js",
 			"!test",
 			"!.next",
