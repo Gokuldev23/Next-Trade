@@ -16,16 +16,18 @@ import {
 } from "@/lib/components/ui/card";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
+import { useAuth } from "@/lib/components/providers/AuthProvider";
 
 export default function SignInPage() {
 	const [state, action, isPending] = useActionState(login, null);
+	const { user, setUser } = useAuth()
 
 	const emailError = state?.errors?.email;
 	const passwordError = state?.errors?.password;
 
-	console.log({ state });
 	useEffect(() => {
 		if (state?.success) {
+			setUser(state?.user)
 			toast.success("You have successfully created your profile!");
 			redirect("/profile");
 		}
@@ -65,9 +67,8 @@ export default function SignInPage() {
 							/>
 							<p
 								id="email-error"
-								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${
-									state?.errors?.email ? "opacity-100" : "opacity-0"
-								}`}
+								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${state?.errors?.email ? "opacity-100" : "opacity-0"
+									}`}
 							>
 								{emailError}
 							</p>
@@ -87,9 +88,8 @@ export default function SignInPage() {
 							/>
 							<p
 								id="password-error"
-								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${
-									state?.errors?.email ? "opacity-100" : "opacity-0"
-								}`}
+								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${state?.errors?.email ? "opacity-100" : "opacity-0"
+									}`}
 							>
 								{passwordError}
 							</p>

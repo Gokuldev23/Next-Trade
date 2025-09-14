@@ -2,6 +2,7 @@ import "./globals.css";
 import { Inter } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import { Toaster } from "@/lib/components/ui/sonner";
+import AuthProvider from "@/lib/components/providers/AuthProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -20,8 +21,12 @@ export default function RootLayout({
 		<ViewTransitions>
 			<html lang="en">
 				<body className={inter.className}>
-					<main>{children}</main>
-					<Toaster richColors />
+					<AuthProvider initialUser={null}>
+						<div>
+							<main>{children}</main>
+							<Toaster richColors />
+						</div>
+					</AuthProvider>
 				</body>
 			</html>
 		</ViewTransitions>
