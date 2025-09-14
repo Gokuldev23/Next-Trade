@@ -16,17 +16,6 @@ import {
 } from "@/lib/components/ui/card";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
-import type { LoginState } from "@/lib/types/auth.type";
-
-const _initialState: LoginState = {
-	success: false,
-	message: "",
-	errors: null,
-	inputs: {
-		email: "",
-		password: "",
-	},
-};
 
 export default function SignInPage() {
 	const [state, action, isPending] = useActionState(login, null);
