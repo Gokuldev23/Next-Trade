@@ -7,7 +7,7 @@
 		"build": "next build --turbopack",
 		"start": "next start",
 		"lint": "biome check",
-		"lint:fix": "biome check --unsafe",
+		"lint:fix": "biome check --write --unsafe",
 		"format": "biome format --write --fix",
 		"test": "jest",
 		"test:ci": "jest --ci --coverage"
