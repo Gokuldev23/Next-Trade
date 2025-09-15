@@ -1,35 +1,31 @@
-"use client"
-import React, { useContext, useState } from 'react'
-import { UserType } from '@/lib/types/user.type'
-import { createContext } from 'react'
-
+"use client";
+import type React from "react";
+import { createContext, useContext, useState } from "react";
+import type { UserType } from "@/lib/types/user.type";
 
 type AuthContextType = {
-    user: UserType | null;
-    setUser: (user: UserType | null) => void;
+	user: UserType | null;
+	setUser: (user: UserType | null) => void;
 };
 
-const AuthContext = createContext<AuthContextType | null>(null)
+const AuthContext = createContext<AuthContextType | null>(null);
 
 interface AuthProviderProps {
-    children: React.ReactNode;
-    initialUser: UserType | null;
+	children: React.ReactNode;
+	initialUser: UserType | null;
 }
 
-export default function AuthProvider({ children, initialUser }: AuthProviderProps) {
+export default function AuthProvider({
+	children,
+	initialUser,
+}: AuthProviderProps) {
+	const [user, setUser] = useState<UserType | null>(initialUser);
 
-    const [user, setUser] = useState<UserType | null>(initialUser);
-
-    return (
-        <AuthContext value={{ user, setUser }}>
-            {children}
-        </AuthContext>
-    )
+	return <AuthContext value={{ user, setUser }}>{children}</AuthContext>;
 }
-
 
 export function useAuth() {
-    const context = useContext(AuthContext);
-    if (!context) throw new Error("useAuth must be used inside <AuthProvider>");
-    return context;
+	const context = useContext(AuthContext);
+	if (!context) throw new Error("useAuth must be used inside <AuthProvider>");
+	return context;
 }

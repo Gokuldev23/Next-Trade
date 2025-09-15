@@ -63,7 +63,7 @@ const login = async (prev: any, formData: FormData) => {
 			message: "Login successful",
 			errors: null,
 			inputs: null,
-			user:user
+			user: user,
 		};
 	} catch (error) {
 		console.log({ error });

@@ -1,8 +1,8 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
-import { Toaster } from "@/lib/components/ui/sonner";
 import AuthProvider from "@/lib/components/providers/AuthProvider";
+import { Toaster } from "@/lib/components/ui/sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -6,6 +6,7 @@ import { Link } from "next-view-transitions";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { login } from "@/lib/actions/auth.action";
+import { useAuth } from "@/lib/components/providers/AuthProvider";
 import { Button } from "@/lib/components/ui/button";
 import {
 	Card,
@@ -16,25 +17,24 @@ import {
 } from "@/lib/components/ui/card";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
-import { useAuth } from "@/lib/components/providers/AuthProvider";
 
 export default function SignInPage() {
 	const [state, action, isPending] = useActionState(login, null);
-	const { user, setUser } = useAuth()
+	const { setUser } = useAuth();
 
 	const emailError = state?.errors?.email;
 	const passwordError = state?.errors?.password;
 
 	useEffect(() => {
 		if (state?.success) {
-			setUser(state?.user)
+			setUser(state?.user);
 			toast.success("You have successfully created your profile!");
 			redirect("/profile");
 		}
 		if (!state?.success && state?.message) {
 			toast.error(state?.message);
 		}
-	}, [state?.success, state?.message]);
+	}, [state?.success, state?.message, setUser, state?.user]);
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -67,8 +67,9 @@ export default function SignInPage() {
 							/>
 							<p
 								id="email-error"
-								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${state?.errors?.email ? "opacity-100" : "opacity-0"
-									}`}
+								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${
+									state?.errors?.email ? "opacity-100" : "opacity-0"
+								}`}
 							>
 								{emailError}
 							</p>
@@ -88,8 +89,9 @@ export default function SignInPage() {
 							/>
 							<p
 								id="password-error"
-								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${state?.errors?.email ? "opacity-100" : "opacity-0"
-									}`}
+								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${
+									state?.errors?.email ? "opacity-100" : "opacity-0"
+								}`}
 							>
 								{passwordError}
 							</p>
