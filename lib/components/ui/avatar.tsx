@@ -1,7 +1,6 @@
 "use client";
 
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
-import Image from "next/image";
 import type * as React from "react";
 import { cn } from "@/lib/utils";
 
@@ -30,6 +29,7 @@ function AvatarImage({
 			data-slot="avatar-image"
 			className={cn("aspect-square size-full", className)}
 			{...props}
+			alt={props?.alt}
 		/>
 	);
 }
