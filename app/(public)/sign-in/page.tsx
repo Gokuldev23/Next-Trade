@@ -6,6 +6,7 @@ import { Link } from "next-view-transitions";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
 import { login } from "@/lib/actions/auth.action";
+import { useAuth } from "@/lib/components/providers/AuthProvider";
 import { Button } from "@/lib/components/ui/button";
 import {
 	Card,
@@ -19,20 +20,21 @@ import { Label } from "@/lib/components/ui/label";
 
 export default function SignInPage() {
 	const [state, action, isPending] = useActionState(login, null);
+	const { setUser } = useAuth();
 
 	const emailError = state?.errors?.email;
 	const passwordError = state?.errors?.password;
 
-	console.log({ state });
 	useEffect(() => {
 		if (state?.success) {
+			setUser(state?.user);
 			toast.success("You have successfully created your profile!");
-			redirect("/profile");
+			redirect("/trades");
 		}
 		if (!state?.success && state?.message) {
 			toast.error(state?.message);
 		}
-	}, [state?.success, state?.message]);
+	}, [state?.success, state?.message, setUser, state?.user]);
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-background px-4">
