@@ -1,10 +1,11 @@
 import "./globals.css";
-import { Inter } from "next/font/google";
+import { Inter,Rock_Salt } from "next/font/google";
 import { ViewTransitions } from "next-view-transitions";
 import AuthProvider from "@/lib/components/providers/AuthProvider";
 import { Toaster } from "@/lib/components/ui/sonner";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ["latin"],variable:'--font-inter' });
+const rockSalt = Rock_Salt({weight:"400",variable:'--font-rocksalt'});
 
 export const metadata = {
 	title: "Nxt Trade - Trading Portfolio Management",
@@ -20,7 +21,7 @@ export default function RootLayout({
 	return (
 		<ViewTransitions>
 			<html lang="en">
-				<body className={inter.className}>
+				<body className={`${inter.variable} ${rockSalt.variable}`} >
 					<AuthProvider initialUser={null}>
 						<div>
 							<main>{children}</main>

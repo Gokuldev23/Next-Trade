@@ -29,7 +29,7 @@ export default function SignInPage() {
 		if (state?.success) {
 			setUser(state?.user);
 			toast.success("You have successfully created your profile!");
-			redirect("/profile");
+			redirect("/trades");
 		}
 		if (!state?.success && state?.message) {
 			toast.error(state?.message);
