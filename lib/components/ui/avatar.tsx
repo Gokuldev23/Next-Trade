@@ -26,7 +26,7 @@ function AvatarImage({
 	...props
 }: React.ComponentProps<typeof AvatarPrimitive.Image>) {
 	return (
-		<Image
+		<img
 			data-slot="avatar-image"
 			className={cn("aspect-square size-full", className)}
 			{...props}
