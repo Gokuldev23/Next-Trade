@@ -1,9 +1,10 @@
 import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { getRedisClient } from "../db/redis";
+import type { UserType } from "../types/user.type";
 
 const SESSION_PREFIX = "session:";
-const SESSION_TTL = 60; // 1 minute in seconds
+const SESSION_TTL = 600; // 1 minute in seconds
 const COOKIE_NAME = "sessionId";
 
 type SessionData = Record<string, any>;
@@ -46,16 +47,15 @@ export async function createSession(
 	return sessionId;
 }
 
-export async function getSession<T extends SessionData>(): Promise<T | null> {
+export async function getSession(): Promise<UserType | null> {
 	const client = getRedisClient();
 
 	const sessionId = await getSessionIdByCookie(await cookies());
-	console.log({ sessionId });
 	if (!sessionId) return null;
 
 	const data = await client.get(SESSION_PREFIX + sessionId);
 
-	return data as T;
+	return data as UserType;
 }
 
 export async function updateSession(ttl: number = SESSION_TTL): Promise<void> {
