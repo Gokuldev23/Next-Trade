@@ -5,7 +5,7 @@ import UserProfileMenu from "./UserProfileMenu";
 export default async function Navbar() {
 	const userPromise = getSession();
 	return (
-		<div className="px-4 py-2 border flex justify-between items-center">
+		<div className="px-4 py-2  flex justify-between items-center">
 			<div className="flex items-center">
 				<Image
 					className="w-20"

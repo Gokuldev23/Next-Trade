@@ -1,31 +1,45 @@
+"use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { use } from "react";
 import type { UserType } from "@/lib/types/user.type";
 import { getInitials } from "@/lib/utils";
+import { Menu, MenuItem, MenuItems, Trigger } from "./ProfileMenu";
 
-interface UserProfileMenuProps {
+export default function UserProfileMenu({
+	userPromise,
+}: {
 	userPromise: Promise<UserType | null>;
-}
-
-export default function UserProfileMenu({ userPromise }: UserProfileMenuProps) {
+}) {
+	const router = useRouter();
 	const user = use(userPromise);
-	if (!user) {
-		return <h1>Something went wrong</h1>;
-	}
+	if (!user) return <h1>Something went wrong</h1>;
+
 	const userName = getInitials(user.name);
-	console.log({ userName, name: user.name });
+
 	return (
-		<div className="flex items-center gap-4">
-			{user?.profile_image_url && (
-				<Image
-					className="size-10 object-cover rounded-full"
-					src={user.profile_image_url}
-					width={80}
-					height={80}
-					alt="Profile"
-				/>
-			)}
-			<p>{userName}</p>
-		</div>
+		<Menu>
+			<Trigger>
+				<div className="flex items-center gap-4 border rounded-full px-2 py-2 corner-bevel">
+					{user.profile_image_url && (
+						<Image
+							className="size-10 object-cover rounded-full"
+							src={user.profile_image_url}
+							width={80}
+							height={80}
+							alt="Profile"
+						/>
+					)}
+					<p>{userName}</p>
+				</div>
+			</Trigger>
+
+			<MenuItems className="mt-2">
+				<MenuItem onClick={() => router.push("/profile")}>Profile</MenuItem>
+				<MenuItem onClick={() => console.log("Logout clicked")}>
+					Logout
+				</MenuItem>
+			</MenuItems>
+		</Menu>
 	);
 }
