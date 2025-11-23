@@ -1,14 +1,17 @@
-"use client"
-import {Menu,MenuItem,MenuItems,Trigger} from "./ProfileMenu";
+"use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { use } from "react";
-import { useRouter } from 'next/navigation'
 import type { UserType } from "@/lib/types/user.type";
 import { getInitials } from "@/lib/utils";
+import { Menu, MenuItem, MenuItems, Trigger } from "./ProfileMenu";
 
-export default function UserProfileMenu({ userPromise }: { userPromise: Promise<UserType | null> }) {
-
-	const router = useRouter()
+export default function UserProfileMenu({
+	userPromise,
+}: {
+	userPromise: Promise<UserType | null>;
+}) {
+	const router = useRouter();
 	const user = use(userPromise);
 	if (!user) return <h1>Something went wrong</h1>;
 
@@ -32,8 +35,10 @@ export default function UserProfileMenu({ userPromise }: { userPromise: Promise<
 			</Trigger>
 
 			<MenuItems className="mt-2">
-				<MenuItem onClick={()=>router.push('/profile')}>Profile</MenuItem>
-				<MenuItem onClick={() => console.log("Logout clicked")}>Logout</MenuItem>
+				<MenuItem onClick={() => router.push("/profile")}>Profile</MenuItem>
+				<MenuItem onClick={() => console.log("Logout clicked")}>
+					Logout
+				</MenuItem>
 			</MenuItems>
 		</Menu>
 	);
