@@ -1,36 +1,112 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📈 NexTrade — Personal Trading Journal & Analytics  
+A modern, full-stack **trading journal** built with Next.js 15, PostgreSQL (raw SQL), shadcn/ui, and TanStack Table.  
+Track your trades, evaluate performance, analyze strategies, and manage portfolios — all inside a clean, fast, and intuitive dashboard.
 
-## Getting Started
+---
 
-First, run the development server:
+## 🚀 Tech Stack
 
+- **Next.js 15** (App Router, RSC, Server Actions)
+- **TypeScript**
+- **PostgreSQL** (raw SQL, no ORM)
+- **shadcn/ui**
+- **TanStack Table v8** (sorting, filtering)
+- **Tailwind CSS**
+- **Session-based Authentication**
+
+---
+
+## 📊 Features
+
+### 🧾 Trade Management  
+- Add/update/delete trades  
+- Track entry, exit, stop loss, target  
+- Connect trades with strategy + portfolio  
+- Auto-default fields: net PnL, fees, dates  
+
+### 🔍 Data Table (shadcn + TanStack)
+- Sorting  
+- Filtering  
+- Global search  
+- Clean shadcn UI  
+- Optimized for large datasets  
+
+### 💾 Real Database (PostgreSQL)
+- Normalized schema  
+- Strong constraints (exit validation, sl/tp, etc.)  
+- Raw SQL for performance + full control  
+- User-isolated data (session-based)  
+
+---
+
+### 📂 Project Structure
+
+src/
+ ├─ app/
+ │   ├─ trades/
+ │   │    ├─ page.tsx
+ │   │    └─ TradeTable.tsx
+ │   └─ layout.tsx
+ │
+ ├─ lib/
+ │   ├─ db.ts
+ │   ├─ session.ts
+ │   └─ actions/
+ │        └─ trade.action.ts
+ │
+ ├─ components/
+ │   ├─ table/
+ │   │    ├─ data-table.tsx
+ │   │    └─ columns.tsx
+ │   ├─ trades/
+ │   │    └─ trade-form.tsx
+ │   └─ ui/
+ │        (shadcn components)
+ │
+ └─ types/
+     └─ trade.type.ts
+___
+
+## 🧑‍💻 Running Locally
+
+### 1️⃣ Install dependencies
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install 
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2️⃣ Create .env.local
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash 
+DATABASE_URL=postgres://USER:PASSWORD@localhost:5432/nextrade
+AUTH_SECRET=your-secret
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3️⃣ Apply the database schema
 
-## Learn More
+```bash
+psql < schema.sql
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 4️⃣ Start the development server
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm run dev
+```
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🤝 Contributing
 
-## Deploy on Vercel
+- Contributions, ideas, and feature suggestions are welcome!
+Open an issue or submit a PR if you'd like to improve the project.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 🧑‍🏫 Author
+
+- Gokul Venkatraman
+- Full-Stack Developer | AI Learner | Trader
+- Building tools that are actually useful 📈🔥
+
+
+
