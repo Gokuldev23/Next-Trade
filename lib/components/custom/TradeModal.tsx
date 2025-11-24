@@ -19,7 +19,7 @@ export default function TradeModal() {
 			<DialogTrigger asChild>
 				<Button className="mb-4">+ New Trade</Button>
 			</DialogTrigger>
-			<DialogContent>
+			<DialogContent className="w-full" style={{ maxWidth: "800px" }}>
 				<DialogHeader>
 					<DialogTitle>Create New Trade</DialogTitle>
 				</DialogHeader>
