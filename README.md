@@ -42,30 +42,35 @@ Track your trades, evaluate performance, analyze strategies, and manage portfoli
 ### 📂 Project Structure
 
 ```bash
-src/
- ├─ app/
- │   ├─ trades/
- │   │    ├─ page.tsx
- │   │    └─ TradeTable.tsx
- │   └─ layout.tsx
- │
- ├─ lib/
- │   ├─ db.ts
- │   ├─ session.ts
- │   └─ actions/
- │        └─ trade.action.ts
- │
- ├─ components/
- │   ├─ table/
- │   │    ├─ data-table.tsx
- │   │    └─ columns.tsx
- │   ├─ trades/
- │   │    └─ trade-form.tsx
- │   └─ ui/
- │        (shadcn components)
- │
- └─ types/
-     └─ trade.type.ts
+NEXT-TRADE
+
+├── app
+│   ├── (protected)
+│   │   ├── dashboard
+│   │   │   ├── analytics
+│   │   │   └── trades
+│   │   └── profile
+│   ├── (public)
+│   │   ├── sign-in
+│   │   └── sign-up
+│   ├── api     (if you add later, optional)
+│   └── shared  (optional future folder)
+│
+├── lib
+│   ├── actions
+│   ├── auth
+│   ├── components
+│   │   ├── custom
+│   │   ├── providers
+│   │   └── ui
+│   ├── db
+│   ├── types
+│   └── utils   (file, but keeping as a folder if you want later)
+│
+├── node_modules
+├── public
+└── .env.local  (ignored in git)
+
 ```
 ___
 
