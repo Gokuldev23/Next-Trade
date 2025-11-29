@@ -41,6 +41,7 @@ Track your trades, evaluate performance, analyze strategies, and manage portfoli
 
 ### 📂 Project Structure
 
+```bash
 src/
  ├─ app/
  │   ├─ trades/
@@ -65,6 +66,7 @@ src/
  │
  └─ types/
      └─ trade.type.ts
+```
 ___
 
 ## 🧑‍💻 Running Locally
