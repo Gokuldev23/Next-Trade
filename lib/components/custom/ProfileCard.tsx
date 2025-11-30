@@ -32,7 +32,7 @@ import type { UserType } from "@/lib/types/user.type";
 import { getInitials } from "@/lib/utils";
 
 interface ProfileCardProps {
-	userPromise: Promise<UserType | null>;
+	userPromise: Promise<Record<string, any> | null>;
 }
 
 export default function ProfileCard({ userPromise }: ProfileCardProps) {
