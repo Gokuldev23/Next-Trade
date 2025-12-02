@@ -1,11 +1,11 @@
-import crypto from "node:crypto";
 import { cookies } from "next/headers";
 import { getRedisClient } from "../db/redis";
 import type { UserType } from "../types/user.type";
+import { decrypt, encrypt } from "./encryption";
+import { COOKIE_NAME, SESSION_TTL } from "../contants";
 
-const SESSION_PREFIX = "session:";
-const SESSION_TTL = 600; // 1 minute in seconds
-const COOKIE_NAME = "sessionId";
+const TTL = 600; // 1 minute
+
 
 type SessionData = Record<string, any>;
 
@@ -24,39 +24,16 @@ export type Cookies = {
 	delete: (key: string) => void;
 };
 
-export async function createSession(
-	data: SessionData,
-	ttl: number = SESSION_TTL,
-): Promise<string> {
-	const client = getRedisClient();
-	const sessionId = crypto.randomBytes(32).toString("hex");
+// export async function getSession(): Promise<UserType | null> {
+// 	const client = getRedisClient();
 
-	await client.setex(SESSION_PREFIX + sessionId, ttl, JSON.stringify(data));
+// 	const sessionId = await getSessionIdByCookie(await cookies());
+// 	if (!sessionId) return null;
 
-	// Set cookie in browser
-	(await cookies()).set({
-		name: COOKIE_NAME,
-		value: sessionId,
-		httpOnly: true, // JS can't access (secure)
-		secure: process.env.NODE_ENV === "production",
-		path: "/",
-		maxAge: ttl,
-		sameSite: "lax",
-	});
-	console.log("Session created");
-	return sessionId;
-}
+// 	const data = await client.get(COOKIE_NAME + sessionId);
 
-export async function getSession(): Promise<UserType | null> {
-	const client = getRedisClient();
-
-	const sessionId = await getSessionIdByCookie(await cookies());
-	if (!sessionId) return null;
-
-	const data = await client.get(SESSION_PREFIX + sessionId);
-
-	return data as UserType;
-}
+// 	return data as UserType;
+// }
 
 export async function updateSession(ttl: number = SESSION_TTL): Promise<void> {
 	const client = getRedisClient();
@@ -64,30 +41,30 @@ export async function updateSession(ttl: number = SESSION_TTL): Promise<void> {
 
 	if (!sessionId) return;
 
-	await client.expire(SESSION_PREFIX + sessionId, ttl);
+	await client.expire(COOKIE_NAME + sessionId, ttl);
 
 	// refresh cookie maxAge
 	await setCookie(sessionId, await cookies());
 }
 
-export async function deleteSession(): Promise<void> {
-	const client = getRedisClient();
-	const sessionId = await getSessionIdByCookie(await cookies());
+// export async function deleteSession(): Promise<void> {
+// 	const client = getRedisClient();
+// 	const sessionId = await getSessionIdByCookie(await cookies());
 
-	if (sessionId) {
-		await client.del(SESSION_PREFIX + sessionId);
-	}
+// 	if (sessionId) {
+// 		await client.del(COOKIE_NAME + sessionId);
+// 	}
 
-	// clear cookie
-	(await cookies()).delete(COOKIE_NAME);
-}
+// 	// clear cookie
+// 	(await cookies()).delete(COOKIE_NAME);
+// }
 
 export async function refreshSession(ttl: number = SESSION_TTL): Promise<void> {
 	const client = getRedisClient();
 	const sessionId = await getSessionIdByCookie(await cookies());
 
 	if (sessionId) {
-		await client.expire(SESSION_PREFIX + sessionId, ttl);
+		await client.expire(COOKIE_NAME + sessionId, ttl);
 
 		await setCookie(sessionId, await cookies());
 	}
@@ -105,4 +82,41 @@ async function setCookie(sessionId: string, cookies: Pick<Cookies, "set">) {
 async function getSessionIdByCookie(cookies: Pick<Cookies, "get">) {
 	const sessionData = cookies.get(COOKIE_NAME);
 	return sessionData?.value;
+}
+
+
+export async function setSession(data: UserType) {
+  const token = await encrypt({
+    ...data,
+    exp: Math.floor(Date.now() / 1000) + SESSION_TTL, // expiry
+  });
+
+  const cookieStore = await cookies();
+  cookieStore.set({
+    name: COOKIE_NAME,
+    value: token,
+    httpOnly: true,
+    path: "/",
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: SESSION_TTL,
+  });
+}
+
+export async function getSession() {
+  const cookie = (await cookies()).get(COOKIE_NAME)?.value;
+  if (!cookie) return null;
+
+  const data = await decrypt(cookie);
+  if (!data) return null;
+  const nowSec = Math.floor(Date.now() / 1000);
+
+  if (nowSec > data.exp) return null;
+
+  return data;
+}
+
+export async function deleteSession() {
+  const cookieStore = await cookies();
+  cookieStore.delete(COOKIE_NAME);
 }

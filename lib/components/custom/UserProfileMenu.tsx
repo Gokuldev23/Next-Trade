@@ -5,11 +5,12 @@ import { use } from "react";
 import type { UserType } from "@/lib/types/user.type";
 import { getInitials } from "@/lib/utils";
 import { Menu, MenuItem, MenuItems, Trigger } from "./ProfileMenu";
+import { logout } from "@/lib/actions/auth.action";
 
 export default function UserProfileMenu({
 	userPromise,
 }: {
-	userPromise: Promise<UserType | null>;
+	userPromise: Promise<Record<string,any> | null>;
 }) {
 	const router = useRouter();
 	const user = use(userPromise);
@@ -36,7 +37,7 @@ export default function UserProfileMenu({
 
 			<MenuItems className="mt-2">
 				<MenuItem onClick={() => router.push("/profile")}>Profile</MenuItem>
-				<MenuItem onClick={() => console.log("Logout clicked")}>
+				<MenuItem onClick={logout}>
 					Logout
 				</MenuItem>
 			</MenuItems>
