@@ -11,4 +11,10 @@ export default async function layout({
 	if (user) {
 		redirect("/dashboard/trades", RedirectType.replace);
 	}
+
+    return (
+        <>
+            {children}
+        </>
+    )
 }
