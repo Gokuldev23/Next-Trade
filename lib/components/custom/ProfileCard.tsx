@@ -28,7 +28,6 @@ import {
 } from "@/lib/components/ui/dialog";
 import { Input } from "@/lib/components/ui/input";
 import { Label } from "@/lib/components/ui/label";
-import type { UserType } from "@/lib/types/user.type";
 import { getInitials } from "@/lib/utils";
 
 interface ProfileCardProps {

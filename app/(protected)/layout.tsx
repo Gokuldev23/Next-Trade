@@ -9,7 +9,7 @@ export default async function layout({
 	children: React.ReactNode;
 }) {
 	const user = await getSession();
-	console.log({user})
+	console.log({ user });
 	if (!user) {
 		redirect("/", RedirectType.replace);
 	}

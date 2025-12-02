@@ -1,11 +1,10 @@
 import { cookies } from "next/headers";
+import { COOKIE_NAME, SESSION_TTL } from "../contants";
 import { getRedisClient } from "../db/redis";
 import type { UserType } from "../types/user.type";
 import { decrypt, encrypt } from "./encryption";
-import { COOKIE_NAME, SESSION_TTL } from "../contants";
 
-const TTL = 600; // 1 minute
-
+const _TTL = 600; // 1 minute
 
 type SessionData = Record<string, any>;
 
@@ -84,39 +83,38 @@ async function getSessionIdByCookie(cookies: Pick<Cookies, "get">) {
 	return sessionData?.value;
 }
 
-
 export async function setSession(data: UserType) {
-  const token = await encrypt({
-    ...data,
-    exp: Math.floor(Date.now() / 1000) + SESSION_TTL, // expiry
-  });
+	const token = await encrypt({
+		...data,
+		exp: Math.floor(Date.now() / 1000) + SESSION_TTL, // expiry
+	});
 
-  const cookieStore = await cookies();
-  cookieStore.set({
-    name: COOKIE_NAME,
-    value: token,
-    httpOnly: true,
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    maxAge: SESSION_TTL,
-  });
+	const cookieStore = await cookies();
+	cookieStore.set({
+		name: COOKIE_NAME,
+		value: token,
+		httpOnly: true,
+		path: "/",
+		secure: process.env.NODE_ENV === "production",
+		sameSite: "lax",
+		maxAge: SESSION_TTL,
+	});
 }
 
 export async function getSession() {
-  const cookie = (await cookies()).get(COOKIE_NAME)?.value;
-  if (!cookie) return null;
+	const cookie = (await cookies()).get(COOKIE_NAME)?.value;
+	if (!cookie) return null;
 
-  const data = await decrypt(cookie);
-  if (!data) return null;
-  const nowSec = Math.floor(Date.now() / 1000);
+	const data = await decrypt(cookie);
+	if (!data) return null;
+	const nowSec = Math.floor(Date.now() / 1000);
 
-  if (nowSec > data.exp) return null;
+	if (nowSec > data.exp) return null;
 
-  return data;
+	return data;
 }
 
 export async function deleteSession() {
-  const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_NAME);
+	const cookieStore = await cookies();
+	cookieStore.delete(COOKIE_NAME);
 }

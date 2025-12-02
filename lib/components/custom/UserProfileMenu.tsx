@@ -2,15 +2,14 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { use } from "react";
-import type { UserType } from "@/lib/types/user.type";
+import { logout } from "@/lib/actions/auth.action";
 import { getInitials } from "@/lib/utils";
 import { Menu, MenuItem, MenuItems, Trigger } from "./ProfileMenu";
-import { logout } from "@/lib/actions/auth.action";
 
 export default function UserProfileMenu({
 	userPromise,
 }: {
-	userPromise: Promise<Record<string,any> | null>;
+	userPromise: Promise<Record<string, any> | null>;
 }) {
 	const router = useRouter();
 	const user = use(userPromise);
@@ -37,9 +36,7 @@ export default function UserProfileMenu({
 
 			<MenuItems className="mt-2">
 				<MenuItem onClick={() => router.push("/profile")}>Profile</MenuItem>
-				<MenuItem onClick={logout}>
-					Logout
-				</MenuItem>
+				<MenuItem onClick={logout}>Logout</MenuItem>
 			</MenuItems>
 		</Menu>
 	);

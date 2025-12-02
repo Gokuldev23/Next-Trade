@@ -1,21 +1,20 @@
-import { NextRequest, NextResponse } from "next/server";
-import { decrypt } from "./lib/auth/encryption";
+import { type NextRequest, NextResponse } from "next/server";
 import { getSession } from "./lib/auth/session";
 
 export async function middleware(req: NextRequest) {
-  const token = await getSession()
+	const token = await getSession();
 
-  if (!token) {
-    return redirectToLogin(req);
-  }
+	if (!token) {
+		return redirectToLogin(req);
+	}
 
-  return NextResponse.next();
+	return NextResponse.next();
 }
 
 function redirectToLogin(req: NextRequest) {
-  return NextResponse.redirect(new URL("/sign-in", req.url));
+	return NextResponse.redirect(new URL("/sign-in", req.url));
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*", "/settings/:path*"],
+	matcher: ["/dashboard/:path*", "/profile/:path*", "/settings/:path*"],
 };
