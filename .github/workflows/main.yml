@@ -34,11 +34,17 @@ jobs:
       # Lint with Biome
       - name: Run Biome lint
         run: pnpm run format && pnpm run lint
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
 
       # Build check
       - name: Build project
         run: pnpm run build
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}
 
       # Jest tests
       - name: Run Jest tests
         run: pnpm run test:ci
+        env:
+          SESSION_SECRET: ${{ secrets.SESSION_SECRET }}

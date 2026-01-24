@@ -1,6 +1,6 @@
 import Image from "next/image";
-import UserProfileMenu from "./UserProfileMenu";
 import type { UserType } from "@/lib/types/user.type";
+import UserProfileMenu from "./UserProfileMenu";
 
 export default function Navbar({ user }: { user: UserType | null }) {
 	return (
