@@ -7,11 +7,7 @@ import type { UserType } from "@/lib/types/user.type";
 import { getInitials } from "@/lib/utils";
 import { Menu, MenuItem, MenuItems, Trigger } from "./Menu";
 
-export default function UserProfileMenu({
-	user,
-}: {
-	user: UserType | null;
-}) {
+export default function UserProfileMenu({ user }: { user: UserType | null }) {
 	const router = useRouter();
 
 	if (!user) return <h1>Something went wrong</h1>;
