@@ -1,18 +1,19 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { use } from "react";
+
 import { logout } from "@/lib/actions/auth.action";
+import type { UserType } from "@/lib/types/user.type";
 import { getInitials } from "@/lib/utils";
-import { Menu, MenuItem, MenuItems, Trigger } from "./ProfileMenu";
+import { Menu, MenuItem, MenuItems, Trigger } from "./Menu";
 
 export default function UserProfileMenu({
-	userPromise,
+	user,
 }: {
-	userPromise: Promise<Record<string, any> | null>;
+	user: UserType | null;
 }) {
 	const router = useRouter();
-	const user = use(userPromise);
+
 	if (!user) return <h1>Something went wrong</h1>;
 
 	const userName = getInitials(user.name);

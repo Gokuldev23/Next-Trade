@@ -1,9 +1,8 @@
 import Image from "next/image";
-import { getSession } from "@/lib/auth/session";
 import UserProfileMenu from "./UserProfileMenu";
+import type { UserType } from "@/lib/types/user.type";
 
-export default async function Navbar() {
-	const userPromise = getSession();
+export default function Navbar({ user }: { user: UserType | null }) {
 	return (
 		<div className="px-4 py-2  flex justify-between items-center">
 			<div className="flex items-center">
@@ -17,7 +16,7 @@ export default async function Navbar() {
 				<p className="font-rock text-primary">Next Trade</p>
 			</div>
 			<div className="">
-				<UserProfileMenu userPromise={userPromise} />
+				<UserProfileMenu user={user} />
 			</div>
 		</div>
 	);

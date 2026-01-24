@@ -14,7 +14,7 @@ export default async function layout({
 	}
 	return (
 		<div>
-			<Navbar />
+			<Navbar user={user} />
 			{children}
 		</div>
 	);

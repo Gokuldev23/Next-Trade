@@ -1,6 +1,5 @@
 import { cookies } from "next/headers";
-import { COOKIE_NAME, SESSION_TTL } from "../contants";
-import { getRedisClient } from "../db/redis";
+import { COOKIE_NAME, SESSION_TTL } from "../constants";
 import type { UserType } from "../types/user.type";
 import { decrypt, encrypt } from "./encryption";
 
@@ -35,36 +34,18 @@ export type Cookies = {
 // }
 
 export async function updateSession(ttl: number = SESSION_TTL): Promise<void> {
-	const client = getRedisClient();
 	const sessionId = await getSessionIdByCookie(await cookies());
 
 	if (!sessionId) return;
-
-	await client.expire(COOKIE_NAME + sessionId, ttl);
 
 	// refresh cookie maxAge
 	await setCookie(sessionId, await cookies());
 }
 
-// export async function deleteSession(): Promise<void> {
-// 	const client = getRedisClient();
-// 	const sessionId = await getSessionIdByCookie(await cookies());
-
-// 	if (sessionId) {
-// 		await client.del(COOKIE_NAME + sessionId);
-// 	}
-
-// 	// clear cookie
-// 	(await cookies()).delete(COOKIE_NAME);
-// }
-
 export async function refreshSession(ttl: number = SESSION_TTL): Promise<void> {
-	const client = getRedisClient();
 	const sessionId = await getSessionIdByCookie(await cookies());
 
 	if (sessionId) {
-		await client.expire(COOKIE_NAME + sessionId, ttl);
-
 		await setCookie(sessionId, await cookies());
 	}
 }
@@ -111,7 +92,7 @@ export async function getSession() {
 
 	if (nowSec > data.exp) return null;
 
-	return data;
+	return data as UserType;
 }
 
 export async function deleteSession() {
