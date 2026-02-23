@@ -26,7 +26,7 @@ export default function SignInPage() {
 	useEffect(() => {
 		if (state?.success) {
 			toast.success("You have successfully created your profile!");
-			redirect("/dashboard/trades");
+			redirect("/dashboard");
 		}
 		if (!state?.success && state?.message) {
 			toast.error(state?.message);
