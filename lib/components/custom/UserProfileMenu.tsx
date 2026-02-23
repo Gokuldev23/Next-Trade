@@ -32,7 +32,7 @@ export default function UserProfileMenu({ user }: { user: UserType | null }) {
 			</Trigger>
 
 			<MenuItems className="mt-2">
-				<MenuItem onClick={() => router.push("/profile")}>Profile</MenuItem>
+				<MenuItem onClick={() => router.push("/dashboard/profile")}>Profile</MenuItem>
 				<MenuItem onClick={logout}>Logout</MenuItem>
 			</MenuItems>
 		</Menu>

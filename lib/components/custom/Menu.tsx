@@ -46,7 +46,7 @@ function MenuItems({
 		<div
 			id={ctx.popoverId}
 			popover="auto"
-			className={`rounded-xl border bg-white shadow-lg min-w-40 ${className} menu-items-css`}
+			className={`rounded-xl border bg-popover/80 backdrop-blur-xl shadow-xl min-w-48 p-1 ${className} menu-items-css`}
 		>
 			{children}
 		</div>
@@ -64,7 +64,7 @@ function MenuItem({
 	return (
 		<button
 			type="button"
-			className="w-full text-left px-4 py-2 hover:bg-gray-100"
+			className="w-full text-left px-3 py-2.5 rounded-lg hover:bg-accent/50 hover:text-accent-foreground transition-colors text-sm font-medium"
 			onClick={onClick}
 		>
 			{children}

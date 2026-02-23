@@ -6,6 +6,6 @@ export default async function Page() {
 	if (!user) {
 		redirect("/sign-in", RedirectType.replace);
 	} else {
-		redirect("/dashboard/trades");
+		redirect("/dashboard");
 	}
 }
