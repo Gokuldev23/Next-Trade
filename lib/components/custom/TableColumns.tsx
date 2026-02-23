@@ -69,16 +69,6 @@ export const tradeColumns: ColumnDef<TradeWithJoins>[] = [
 		header: "Status",
 	},
 	{
-		accessorKey: "strategy_name",
-		header: "Strategy",
-		cell: ({ row }) => row.original.strategy_name ?? "-",
-	},
-	{
-		accessorKey: "portfolio_name",
-		header: "Portfolio",
-		cell: ({ row }) => row.original.portfolio_name ?? "-",
-	},
-	{
 		accessorKey: "entry_date",
 		header: "Entry Date",
 		cell: ({ row }) => new Date(row.original.entry_date).toLocaleDateString(),
