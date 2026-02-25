@@ -1,9 +1,7 @@
 -- Trade Journal Database Schema
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE TYPE trade_type AS ENUM ('BUY', 'SELL', 'SHORT', 'COVER');
 CREATE TYPE trade_status AS ENUM ('OPEN', 'CLOSED', 'CANCELLED');
-
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     username VARCHAR(50) UNIQUE NOT NULL,
@@ -15,7 +13,15 @@ CREATE TABLE users (
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
     is_active BOOLEAN DEFAULT TRUE
 );
-
+CREATE TABLE strategies (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    color VARCHAR(7) DEFAULT '#000000',
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
 CREATE TABLE trades (
     id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
@@ -33,21 +39,20 @@ CREATE TABLE trades (
     fees DECIMAL(15, 4) DEFAULT 0,
     net_pnl DECIMAL(15, 4) DEFAULT 0,
     notes TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    strategy UUID REFERENCES strategies(id) ON DELETE
+    SET NULL,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
 );
-
 CREATE INDEX idx_trades_user_id ON trades (user_id);
 CREATE INDEX idx_trades_symbol ON trades (symbol);
 CREATE INDEX idx_trades_entry_date ON trades (entry_date);
 CREATE INDEX idx_trades_status ON trades (status);
-
-CREATE OR REPLACE FUNCTION update_updated_at_column() RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = CURRENT_TIMESTAMP;
-    RETURN NEW;
+CREATE OR REPLACE FUNCTION update_updated_at_column() RETURNS TRIGGER AS $$ BEGIN NEW.updated_at = CURRENT_TIMESTAMP;
+RETURN NEW;
 END;
 $$ language 'plpgsql';
-
-CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_trades_updated_at BEFORE UPDATE ON trades FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_users_updated_at BEFORE
+UPDATE ON users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_trades_updated_at BEFORE
+UPDATE ON trades FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();

@@ -1,10 +1,8 @@
 import { Suspense } from "react";
-import { Plus } from "lucide-react";
-import Link from "next/link";
-import { Button } from "@/lib/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/lib/components/ui/card";
 import TradeTable from "@/lib/components/custom/TradeTable"; // We will create this
 import { getTrades } from "@/lib/actions/trade.action"; // We will create this
+import AddTradeModal from "@/lib/components/custom/AddTradeModal";
 
 export default async function TradesPage() {
   const trades = await getTrades();
@@ -18,14 +16,7 @@ export default async function TradesPage() {
             Manage and analyze your trading history.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Link href="/dashboard/trades/new">
-            <Button className="shadow-lg shadow-primary/25">
-              <Plus className="mr-2 size-4" />
-              New Trade
-            </Button>
-          </Link>
-        </div>
+        <AddTradeModal />
       </div>
 
       <Card className="glass-card">
