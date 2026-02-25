@@ -29,7 +29,10 @@ export default function SignUpPage() {
 			toast.success("You have successfully created your profile!");
 			redirect("/sign-in");
 		}
-	}, [state?.success]);
+		if (!state?.success && state?.message) {
+			toast.error(state?.message);
+		}
+	}, [state?.success, state?.message]);
 
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-background px-4">
@@ -99,7 +102,7 @@ export default function SignUpPage() {
 								required
 							/>
 							<p
-								id="email-error"
+								id="password-error"
 								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${
 									passwordError ? "opacity-100" : "opacity-0"
 								}`}

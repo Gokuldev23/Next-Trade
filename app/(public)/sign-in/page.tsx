@@ -25,7 +25,7 @@ export default function SignInPage() {
 
 	useEffect(() => {
 		if (state?.success) {
-			toast.success("You have successfully created your profile!");
+			toast.success("Logged in successfully!");
 			redirect("/dashboard");
 		}
 		if (!state?.success && state?.message) {
@@ -82,12 +82,12 @@ export default function SignInPage() {
 								placeholder="••••••••"
 								required
 								defaultValue={state?.inputs?.password}
-								className={`${emailError ? "ring ring-red-500" : ""}`}
+								className={`${passwordError ? "ring ring-red-500" : ""}`}
 							/>
 							<p
 								id="password-error"
 								className={`text-xs text-red-500 absolute top-0 right-0 transition-opacity ${
-									state?.errors?.email ? "opacity-100" : "opacity-0"
+									state?.errors?.password ? "opacity-100" : "opacity-0"
 								}`}
 							>
 								{passwordError}

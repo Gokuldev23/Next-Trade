@@ -3,8 +3,6 @@ import { COOKIE_NAME, SESSION_TTL } from "../constants";
 import type { UserType } from "../types/user.type";
 import { decrypt, encrypt } from "./encryption";
 
-const _TTL = 600; // 1 minute
-
 type SessionData = Record<string, any>;
 
 export type Cookies = {
