@@ -11,10 +11,17 @@ export async function getTrades() {
 
 	try {
 		const res = await query(
-			`SELECT t.*, s.name AS strategy_name, s.color AS strategy_color
+			`SELECT t.*,
+        COALESCE(
+          json_agg(json_build_object('id', s.id, 'name', s.name, 'color', s.color))
+          FILTER (WHERE s.id IS NOT NULL),
+          '[]'::json
+        ) AS strategies
        FROM trades t
-       LEFT JOIN strategies s ON t.strategy = s.id
+       LEFT JOIN trade_strategies ts ON t.id = ts.trade_id
+       LEFT JOIN strategies s ON ts.strategy_id = s.id
        WHERE t.user_id = $1
+       GROUP BY t.id
        ORDER BY t.entry_date DESC`,
 			[user.id],
 		);
@@ -54,8 +61,7 @@ export async function createTrade(formData: FormData) {
 	const notes_raw = formData.get("notes") as string;
 	const notes = notes_raw?.trim() || null;
 
-	const strategy_raw = formData.get("strategy") as string;
-	const strategy = strategy_raw || null;
+	const strategy_ids = formData.getAll("strategy") as string[];
 
 	// Compute PnL when exit price is available
 	let gross_pnl = 0;
@@ -69,15 +75,16 @@ export async function createTrade(formData: FormData) {
 	const net_pnl = gross_pnl - fees;
 
 	try {
-		await query(
+		const result = await query(
 			`INSERT INTO trades (
         user_id, symbol, trade_type, status,
         entry_price, quantity,
         exit_price, stop_loss, target_price,
         entry_date, exit_date,
         gross_pnl, fees, net_pnl,
-        notes, strategy
-      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)`,
+        notes
+      ) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15)
+      RETURNING id`,
 			[
 				user.id,
 				symbol,
@@ -94,9 +101,21 @@ export async function createTrade(formData: FormData) {
 				fees,
 				net_pnl,
 				notes,
-				strategy,
 			],
 		);
+
+		const tradeId = result.rows[0].id;
+
+		if (strategy_ids.length > 0) {
+			const placeholders = strategy_ids
+				.map((_, i) => `($1, $${i + 2})`)
+				.join(", ");
+			await query(
+				`INSERT INTO trade_strategies (trade_id, strategy_id) VALUES ${placeholders}`,
+				[tradeId, ...strategy_ids],
+			);
+		}
+
 		revalidatePath("/dashboard/trades");
 		return { success: true };
 	} catch (e) {
@@ -134,8 +153,7 @@ export async function updateTrade(tradeId: string, formData: FormData) {
 	const notes_raw = formData.get("notes") as string;
 	const notes = notes_raw?.trim() || null;
 
-	const strategy_raw = formData.get("strategy") as string;
-	const strategy = strategy_raw || null;
+	const strategy_ids = formData.getAll("strategy") as string[];
 
 	let gross_pnl = 0;
 	if (exit_price !== null) {
@@ -155,8 +173,8 @@ export async function updateTrade(tradeId: string, formData: FormData) {
         exit_price = $6, stop_loss = $7, target_price = $8,
         entry_date = $9, exit_date = $10,
         gross_pnl = $11, fees = $12, net_pnl = $13,
-        notes = $14, strategy = $15
-      WHERE id = $16 AND user_id = $17`,
+        notes = $14
+      WHERE id = $15 AND user_id = $16`,
 			[
 				symbol,
 				trade_type,
@@ -172,11 +190,23 @@ export async function updateTrade(tradeId: string, formData: FormData) {
 				fees,
 				net_pnl,
 				notes,
-				strategy,
 				tradeId,
 				user.id,
 			],
 		);
+
+		// Replace all strategies
+		await query(`DELETE FROM trade_strategies WHERE trade_id = $1`, [tradeId]);
+		if (strategy_ids.length > 0) {
+			const placeholders = strategy_ids
+				.map((_, i) => `($1, $${i + 2})`)
+				.join(", ");
+			await query(
+				`INSERT INTO trade_strategies (trade_id, strategy_id) VALUES ${placeholders}`,
+				[tradeId, ...strategy_ids],
+			);
+		}
+
 		revalidatePath("/dashboard/trades");
 		return { success: true };
 	} catch (e) {

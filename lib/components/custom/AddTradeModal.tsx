@@ -26,6 +26,7 @@ import {
 import { Textarea } from "@/lib/components/ui/textarea";
 import type { Strategy } from "@/lib/types/trade.type";
 import AddStrategyModal from "./AddStrategyModal";
+import StrategyMultiSelect from "./StrategyMultiSelect";
 
 export default function AddTradeModal() {
 	const [open, setOpen] = useState(false);
@@ -33,7 +34,7 @@ export default function AddTradeModal() {
 	const [loading, setLoading] = useState(false);
 
 	const [strategies, setStrategies] = useState<Strategy[]>([]);
-	const [selectedStrategy, setSelectedStrategy] = useState<string>("");
+	const [selectedStrategies, setSelectedStrategies] = useState<string[]>([]);
 	const [tradeType, setTradeType] = useState<string>("BUY");
 	const [status, setStatus] = useState<string>("OPEN");
 
@@ -47,7 +48,7 @@ export default function AddTradeModal() {
 		setStrategies((prev) =>
 			[...prev, strategy].sort((a, b) => a.name.localeCompare(b.name)),
 		);
-		setSelectedStrategy(strategy.id);
+		setSelectedStrategies((prev) => [...prev, strategy.id]);
 	}
 
 	function handleOpenChange(next: boolean) {
@@ -56,7 +57,7 @@ export default function AddTradeModal() {
 			// reset controlled fields on close
 			setTradeType("BUY");
 			setStatus("OPEN");
-			setSelectedStrategy("");
+			setSelectedStrategies([]);
 		}
 	}
 
@@ -68,7 +69,8 @@ export default function AddTradeModal() {
 		// inject controlled select values
 		formData.set("trade_type", tradeType);
 		formData.set("status", status);
-		if (selectedStrategy) formData.set("strategy", selectedStrategy);
+		formData.delete("strategy");
+		for (const id of selectedStrategies) formData.append("strategy", id);
 
 		const res = await createTrade(formData);
 		setLoading(false);
@@ -282,45 +284,12 @@ export default function AddTradeModal() {
 										(optional)
 									</span>
 								</label>
-								<div className="flex gap-2">
-									<Select
-										value={selectedStrategy}
-										onValueChange={setSelectedStrategy}
-									>
-										<SelectTrigger className="flex-1">
-											<SelectValue placeholder="Select a strategy..." />
-										</SelectTrigger>
-										<SelectContent>
-											{strategies.length === 0 ? (
-												<div className="px-2 py-3 text-sm text-muted-foreground text-center">
-													No strategies yet
-												</div>
-											) : (
-												strategies.map((s) => (
-													<SelectItem key={s.id} value={s.id}>
-														<span className="flex items-center gap-2">
-															<span
-																className="inline-block size-2.5 rounded-full shrink-0"
-																style={{ backgroundColor: s.color ?? "#000" }}
-															/>
-															{s.name}
-														</span>
-													</SelectItem>
-												))
-											)}
-										</SelectContent>
-									</Select>
-
-									<Button
-										type="button"
-										variant="outline"
-										size="icon"
-										onClick={() => setStrategyModalOpen(true)}
-										title="Create new strategy"
-									>
-										<Plus className="size-4" />
-									</Button>
-								</div>
+								<StrategyMultiSelect
+								strategies={strategies}
+								selected={selectedStrategies}
+								onChange={setSelectedStrategies}
+								onAddClick={() => setStrategyModalOpen(true)}
+							/>
 							</div>
 
 							<div className="space-y-2">

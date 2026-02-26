@@ -39,10 +39,13 @@ CREATE TABLE trades (
     fees DECIMAL(15, 4) DEFAULT 0,
     net_pnl DECIMAL(15, 4) DEFAULT 0,
     notes TEXT,
-    strategy UUID REFERENCES strategies(id) ON DELETE
-    SET NULL,
-        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE trade_strategies (
+    trade_id UUID NOT NULL REFERENCES trades(id) ON DELETE CASCADE,
+    strategy_id UUID NOT NULL REFERENCES strategies(id) ON DELETE CASCADE,
+    PRIMARY KEY (trade_id, strategy_id)
 );
 CREATE INDEX idx_trades_user_id ON trades (user_id);
 CREATE INDEX idx_trades_symbol ON trades (symbol);
