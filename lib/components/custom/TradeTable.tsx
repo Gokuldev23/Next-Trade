@@ -19,8 +19,15 @@ import {
   TableRow,
 } from "@/lib/components/ui/table";
 import { Button } from "@/lib/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/lib/components/ui/dropdown-menu";
+import { ArrowUpDown, Download } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { exportTrades } from "@/lib/utils/export";
 import type { TradeWithJoins } from "@/lib/types/trade.type";
 import EditTradeModal from "./EditTradeModal";
 
@@ -165,6 +172,24 @@ export default function TradeTable({ trades }: { trades: TradeWithJoins[] }) {
   return (
     <>
       <div className="space-y-4">
+        <div className="flex justify-end">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="outline" size="sm">
+                <Download className="mr-2 h-4 w-4" />
+                Export
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuItem onClick={() => exportTrades(trades, "csv")}>
+                Export as CSV
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => exportTrades(trades, "json")}>
+                Export as JSON
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
         <div className="rounded-md border overflow-hidden">
           <Table>
             <TableHeader className="bg-muted/50">
