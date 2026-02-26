@@ -106,6 +106,7 @@
   --sidebar-accent-foreground: oklch(0.4 0.1 260);
   --sidebar-border: oklch(0.92 0.005 285);
   --sidebar-ring: oklch(0.55 0.2 260);
+  navigation: auto;
 }
 
 .dark {

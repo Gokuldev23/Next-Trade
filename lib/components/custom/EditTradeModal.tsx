@@ -25,6 +25,7 @@ import {
 import { Textarea } from "@/lib/components/ui/textarea";
 import type { Strategy, TradeWithJoins } from "@/lib/types/trade.type";
 import AddStrategyModal from "./AddStrategyModal";
+import StrategyMultiSelect from "./StrategyMultiSelect";
 
 interface EditTradeModalProps {
   trade: TradeWithJoins;
@@ -49,8 +50,8 @@ export default function EditTradeModal({
   const [loading, setLoading] = useState(false);
 
   const [strategies, setStrategies] = useState<Strategy[]>([]);
-  const [selectedStrategy, setSelectedStrategy] = useState<string>(
-    trade.strategy ?? "",
+  const [selectedStrategies, setSelectedStrategies] = useState<string[]>(
+    trade.strategies.map((s) => s.id),
   );
   const [tradeType, setTradeType] = useState<string>(trade.trade_type);
   const [status, setStatus] = useState<string>(trade.status);
@@ -59,7 +60,7 @@ export default function EditTradeModal({
     if (open) {
       setTradeType(trade.trade_type);
       setStatus(trade.status);
-      setSelectedStrategy(trade.strategy ?? "");
+      setSelectedStrategies(trade.strategies.map((s) => s.id));
       getStrategies().then(setStrategies);
     }
   }, [open, trade]);
@@ -68,7 +69,7 @@ export default function EditTradeModal({
     setStrategies((prev) =>
       [...prev, strategy].sort((a, b) => a.name.localeCompare(b.name)),
     );
-    setSelectedStrategy(strategy.id);
+    setSelectedStrategies((prev) => [...prev, strategy.id]);
   }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -78,11 +79,8 @@ export default function EditTradeModal({
     const formData = new FormData(e.currentTarget);
     formData.set("trade_type", tradeType);
     formData.set("status", status);
-    if (selectedStrategy) {
-      formData.set("strategy", selectedStrategy);
-    } else {
-      formData.delete("strategy");
-    }
+    formData.delete("strategy");
+    for (const id of selectedStrategies) formData.append("strategy", id);
 
     const res = await updateTrade(trade.id, formData);
     setLoading(false);
@@ -294,45 +292,12 @@ export default function EditTradeModal({
                     (optional)
                   </span>
                 </label>
-                <div className="flex gap-2">
-                  <Select
-                    value={selectedStrategy}
-                    onValueChange={setSelectedStrategy}
-                  >
-                    <SelectTrigger className="flex-1">
-                      <SelectValue placeholder="Select a strategy..." />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {strategies.length === 0 ? (
-                        <div className="px-2 py-3 text-sm text-muted-foreground text-center">
-                          No strategies yet
-                        </div>
-                      ) : (
-                        strategies.map((s) => (
-                          <SelectItem key={s.id} value={s.id}>
-                            <span className="flex items-center gap-2">
-                              <span
-                                className="inline-block size-2.5 rounded-full shrink-0"
-                                style={{ backgroundColor: s.color ?? "#000" }}
-                              />
-                              {s.name}
-                            </span>
-                          </SelectItem>
-                        ))
-                      )}
-                    </SelectContent>
-                  </Select>
-
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => setStrategyModalOpen(true)}
-                    title="Create new strategy"
-                  >
-                    <Plus className="size-4" />
-                  </Button>
-                </div>
+                <StrategyMultiSelect
+                  strategies={strategies}
+                  selected={selectedStrategies}
+                  onChange={setSelectedStrategies}
+                  onAddClick={() => setStrategyModalOpen(true)}
+                />
               </div>
 
               <div className="space-y-2">

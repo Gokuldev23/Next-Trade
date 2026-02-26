@@ -102,19 +102,23 @@ const columns = [
       <span className="text-xs text-muted-foreground">{info.getValue()}</span>
     ),
   }),
-  columnHelper.accessor("strategy_name", {
+  columnHelper.accessor("strategies", {
     header: "Strategy",
     cell: (info) => {
-      const name = info.getValue();
-      const color = info.row.original.strategy_color;
-      if (!name) return <span className="text-muted-foreground">—</span>;
+      const strategies = info.getValue();
+      if (!strategies.length)
+        return <span className="text-muted-foreground">—</span>;
       return (
-        <span className="flex items-center gap-1.5">
-          <span
-            className="inline-block size-2 rounded-full shrink-0"
-            style={{ backgroundColor: color ?? "#888" }}
-          />
-          <span className="text-sm">{name}</span>
+        <span className="flex flex-wrap gap-1">
+          {strategies.map((s) => (
+            <span key={s.id} className="flex items-center gap-1">
+              <span
+                className="inline-block size-2 rounded-full shrink-0"
+                style={{ backgroundColor: s.color ?? "#888" }}
+              />
+              <span className="text-sm">{s.name}</span>
+            </span>
+          ))}
         </span>
       );
     },

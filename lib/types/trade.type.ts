@@ -1,3 +1,9 @@
+export type StrategyRef = {
+  id: string;
+  name: string;
+  color: string;
+};
+
 export type TradeWithJoins = {
   id: string;
   user_id: string;
@@ -19,10 +25,7 @@ export type TradeWithJoins = {
   net_pnl: number;
 
   notes: string | null;
-  strategy: string | null;
-
-  strategy_name: string | null;
-  strategy_color: string | null;
+  strategies: StrategyRef[];
 
   created_at: string;
   updated_at: string;

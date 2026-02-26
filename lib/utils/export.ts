@@ -1,6 +1,6 @@
 import type { TradeWithJoins } from "@/lib/types/trade.type";
 
-const CSV_COLUMNS: (keyof TradeWithJoins)[] = [
+const CSV_COLUMNS = [
 	"symbol",
 	"trade_type",
 	"status",
@@ -14,11 +14,13 @@ const CSV_COLUMNS: (keyof TradeWithJoins)[] = [
 	"gross_pnl",
 	"fees",
 	"net_pnl",
-	"strategy_name",
+	"strategies",
 	"notes",
-];
+] as const;
 
-const CSV_HEADERS: Record<(typeof CSV_COLUMNS)[number], string> = {
+type CsvColumn = (typeof CSV_COLUMNS)[number];
+
+const CSV_HEADERS: Record<CsvColumn, string> = {
 	symbol: "Symbol",
 	trade_type: "Type",
 	status: "Status",
@@ -32,7 +34,7 @@ const CSV_HEADERS: Record<(typeof CSV_COLUMNS)[number], string> = {
 	gross_pnl: "Gross P&L",
 	fees: "Fees",
 	net_pnl: "Net P&L",
-	strategy_name: "Strategy",
+	strategies: "Strategies",
 	notes: "Notes",
 };
 
@@ -45,10 +47,17 @@ function escapeCSVCell(value: unknown): string {
 	return str;
 }
 
+function getCellValue(trade: TradeWithJoins, col: CsvColumn): unknown {
+	if (col === "strategies") {
+		return trade.strategies.map((s) => s.name).join("; ") || null;
+	}
+	return trade[col];
+}
+
 export function tradesToCSV(trades: TradeWithJoins[]): string {
 	const header = CSV_COLUMNS.map((col) => CSV_HEADERS[col]).join(",");
 	const rows = trades.map((trade) =>
-		CSV_COLUMNS.map((col) => escapeCSVCell(trade[col])).join(","),
+		CSV_COLUMNS.map((col) => escapeCSVCell(getCellValue(trade, col))).join(","),
 	);
 	return [header, ...rows].join("\n");
 }
@@ -57,7 +66,9 @@ export function tradesToJSON(trades: TradeWithJoins[]): string {
 	const data = trades.map((trade) => {
 		const row: Partial<Record<string, unknown>> = {};
 		for (const col of CSV_COLUMNS) {
-			row[col] = trade[col] ?? null;
+			row[col] = col === "strategies"
+				? trade.strategies.map((s) => ({ id: s.id, name: s.name, color: s.color }))
+				: (trade[col] ?? null);
 		}
 		return row;
 	});
